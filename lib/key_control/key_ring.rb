@@ -1,8 +1,16 @@
 module KeyControl
 
-  class Thread
+  class KeyRing
 
-    KEYRING = "@t"
+    # Public: Get a new KeyControl::KeyRing instance with the specified keyring
+    # identifier.
+    #
+    # keyring - A String or Integer identifying the desired keyring.
+    #
+    # Returns a KeyControl::KeyRing instance.
+    def initialize(keyring)
+      @keyring = keyring
+    end
 
     # Public: Add the requested data to the keychain for the given description.
     #
@@ -11,7 +19,7 @@ module KeyControl
     #
     # Returns nothing.
     def []=(name, data)
-      execute :add, "user", name, "\"#{data}\"", self.class.KEYRING
+      execute :add, "user", name, "\"#{data}\"", @keyring
     end
 
     # Public: Get the data matching the passed description from the keychain.
@@ -20,13 +28,18 @@ module KeyControl
     #
     # Returns the requested data or nil.
     def [](name)
-      result = execute :search, self.class.KEYRING, "user", name
+      result = execute :search, @keyring, "user", name
       execute :read, result if result
     end
 
     private
 
     # Private: Execute the requested action in keyctl.
+    #
+    # action - The keyctl action to perform.
+    # args   - A list of arguments which should be passed to the action.
+    #
+    # Returns the stdout value returned by the call.
     def execute(action, *args)
       command = [action, *args].join(" ")
       `keyctl #{command}`
