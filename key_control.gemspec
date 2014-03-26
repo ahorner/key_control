@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.version       = KeyControl::VERSION
   spec.authors       = ["Andrew Horner"]
   spec.email         = ["andrew@tablexi.com"]
-  spec.summary       = %q{A simple wrapper for the `keyctl` utility.}
+  spec.summary       = "A simple wrapper for the `keyctl` utility."
   spec.description   = <<-TEXT
     Provides a Hash-like syntax for storing and retrieving data from the
     system's keyctl utility.
