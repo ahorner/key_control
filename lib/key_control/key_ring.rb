@@ -29,7 +29,7 @@ module KeyControl
     # Returns the requested data or nil.
     def [](name)
       result = execute :search, @keyring, "user", name
-      execute :read, result if result
+      execute :pipe, result if result
     end
 
     private
