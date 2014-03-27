@@ -10,5 +10,4 @@ module KeyControl
   USER    = -4
   DEFAULT = -5
   GROUP   = -6
-
 end

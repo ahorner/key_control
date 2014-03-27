@@ -4,6 +4,9 @@ module KeyControl
 
   class System
 
+    # Public: Get a proc representing the add_key system call.
+    #
+    # Returns a Fiddle::Function.
     def add
       @add ||= Fiddle::Function.new(
         keyutils["add_key"],
@@ -15,6 +18,9 @@ module KeyControl
         Fiddle::TYPE_INT )
     end
 
+    # Public: Get a proc representing the request_key system call.
+    #
+    # Returns a Fiddle::Function.
     def search
       @search ||= Fiddle::Function.new(
         keyutils["request_key"],
@@ -25,6 +31,9 @@ module KeyControl
         Fiddle::TYPE_INT )
     end
 
+    # Public: Get a proc representing the keyctl_read system call.
+    #
+    # Returns a Fiddle::Function.
     def read
       @read ||= Fiddle::Function.new(
         keyutils["keyctl_read"],
@@ -36,6 +45,13 @@ module KeyControl
 
     private
 
+    # Private: Get a handle representing the system calls available through
+    # libkeyutils.so.
+    # TODO: For now, we assume that the shared object file is in the default
+    # location for CentOS installations. It would be nice to make this more
+    # flexible.
+    #
+    # Returns a Fiddle::Handle.
     def keyutils
       @keyutils ||= Fiddle::Handle.new("/lib64/libkeyutils.so.1.3")
     end
