@@ -41,6 +41,11 @@ That's it! The power of this gem comes from the ability to use your kernel's
 built-in key management mechanism to share information between Ruby processes
 without exposing your data to the outside world.
 
+## Future Enhancements
+
+- Improved `libkeyutils` shared object library detection
+- Basic keyring management (creation, specifically)
+
 ## Contributing
 
 1. Fork it ( http://github.com/<my-github-username>/key_control/fork )
