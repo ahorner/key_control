@@ -53,7 +53,7 @@ module KeyControl
     #
     # Returns a Fiddle::Handle.
     def keyutils
-      @keyutils ||= Fiddle::Handle.new("/lib64/libkeyutils.so.1.3")
+      @keyutils ||= Fiddle::Handle.new("/lib64/libkeyutils.so.1")
     end
   end
 end
