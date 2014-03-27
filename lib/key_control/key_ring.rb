@@ -10,6 +10,7 @@ module KeyControl
     # Returns a KeyControl::KeyRing instance.
     def initialize(keyring)
       @keyring = keyring
+      @system = System.new
     end
 
     # Public: Add the requested data to the keychain for the given description.
@@ -19,7 +20,7 @@ module KeyControl
     #
     # Returns nothing.
     def []=(name, data)
-      execute :add, "user", name, "\"#{data}\"", @keyring
+      execute(:add, "user", name, data, data.length, @keyring)
     end
 
     # Public: Get the data matching the passed description from the keychain.
@@ -28,21 +29,26 @@ module KeyControl
     #
     # Returns the requested data or nil.
     def [](name)
-      result = execute :search, @keyring, "user", name
-      execute :pipe, result unless result.empty?
+      handle = execute(:search, "user", name, nil, @keyring)
+      return nil if handle == -1
+
+      length = execute(:read, handle, "", 0)
+      buffer = "0" * length
+      execute(:read, handle, buffer, length)
+
+      buffer
     end
 
     private
 
     # Private: Execute the requested action in keyctl.
     #
-    # action - The keyctl action to perform.
+    # action - The action to perform.
     # args   - A list of arguments which should be passed to the action.
     #
     # Returns the stdout value returned by the call.
     def execute(action, *args)
-      command = [action, *args].join(" ")
-      `keyctl #{command}`
+      @system.send(action).call(*args)
     end
   end
 end
