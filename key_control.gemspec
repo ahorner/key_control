@@ -14,7 +14,7 @@ Gem::Specification.new do |spec|
     system's keyctl utility.
   TEXT
 
-  spec.homepage      = ""
+  spec.homepage      = "https://github.com/ahorner/key_control"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0")
