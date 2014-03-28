@@ -20,6 +20,17 @@ Or install it yourself as:
 
 ## Usage
 
+### Availability
+
+You can check if `KeyControl` is supported on your system with
+`KeyControl.available?`. This will search for the libkeyutils shared object
+file in all known default locations, and return a boolean based on detection.
+
+If you want to help improve the list of library locations, please don't
+hesitate to open an issue or submit a pull request.
+
+### Key Storage/Retrieval
+
 The basic API consists of a single class, `KeyControl::KeyRing`. The `KeyRing`
 initializer takes a single argument, the ID of the keyring you wish to store
 your data in. There are several (very useful) [special keyrings](http://manpages.ubuntu.com/manpages/oneiric/man1/keyctl.1.html),
