@@ -47,13 +47,16 @@ module KeyControl
 
     # Private: Get a handle representing the system calls available through
     # libkeyutils.so.
-    # TODO: For now, we assume that the shared object file is in the default
-    # location for CentOS installations. It would be nice to make this more
-    # flexible.
     #
     # Returns a Fiddle::Handle.
     def keyutils
-      @keyutils ||= Fiddle::Handle.new("/lib64/libkeyutils.so.1")
+      @keyutils ||= KeyControl::LIBRARIES.map do |library|
+        begin
+          Fiddle::Handle.new(library)
+        rescue Fiddle::DLError
+          nil
+        end
+      end.compact.first
     end
   end
 end
