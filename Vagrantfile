@@ -3,7 +3,7 @@
 
 # Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
 VAGRANTFILE_API_VERSION = "2"
-DEFAULT_RUBY = "1.9.3-p545"
+DEFAULT_RUBY = "2.0.0-p451"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.box = "chef/centos-6.5"
@@ -14,7 +14,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     wget http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
     wget http://rpms.famillecollet.com/enterprise/remi-release-6.rpm
     rpm -Uvh remi-release-6*.rpm epel-release-6*.rpm
-    yum install git libffi-devel openssl-devel -y
+    yum install git libffi-devel openssl-devel readline-devel -y
     yum groupinstall "Development Tools" -y
     sudo -u vagrant git clone https://github.com/sstephenson/rbenv.git ~vagrant/.rbenv
     sudo -u vagrant echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~vagrant/.bash_profile
