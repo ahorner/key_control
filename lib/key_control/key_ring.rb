@@ -33,7 +33,7 @@ module KeyControl
       return nil if handle == -1
 
       length = execute(:read, handle, "", 0)
-      buffer = "0" * length
+      buffer = "\x00" * length
       execute(:read, handle, buffer, length)
 
       buffer

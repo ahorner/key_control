@@ -50,13 +50,13 @@ module KeyControl
     #
     # Returns a Fiddle::Handle.
     def keyutils
-      @keyutils ||= KeyControl::LIBRARIES.map do |library|
+      @keyutils ||= KeyControl::LIBRARIES.detect do |library|
         begin
-          Fiddle::Handle.new(library)
+          break Fiddle::Handle.new(library)
         rescue Fiddle::DLError
           nil
         end
-      end.compact.first
+      end
     end
   end
 end
