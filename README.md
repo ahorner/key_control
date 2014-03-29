@@ -23,11 +23,8 @@ Or install it yourself as:
 ### Availability
 
 You can check if `KeyControl` is supported on your system with
-`KeyControl.available?`. This will search for the libkeyutils shared object
-file in all known default locations, and return a boolean based on detection.
-
-If you want to help improve the list of library locations, please don't
-hesitate to open an issue or submit a pull request.
+`KeyControl.available?`. This will attempt to locate a libkeyutils shared
+library on the system, and return a boolean based on detection.
 
 ### Key Storage/Retrieval
 
@@ -54,8 +51,7 @@ without exposing your data to the outside world.
 
 ## Future Enhancements
 
-- Improved `libkeyutils` shared object library detection
-- Basic keyring management (creation, specifically)
+- Non-default keyring management (creation, specifically)
 
 ## Contributing
 
