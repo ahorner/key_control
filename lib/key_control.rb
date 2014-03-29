@@ -13,16 +13,29 @@ module KeyControl
   DEFAULT = -5
   GROUP   = -6
 
-  # A list of potential library paths. Currently points to the default path for
-  # CentOS installations.
-  # TODO: Track down and add the default library paths for more distros.
+  # A list of potential library paths. Currently looks for the default shared
+  # libraries on CentOS installations.
   LIBRARIES = %w(
-    /lib64/libkeyutils.so.1 )
+    libkeyutils.so
+    libkeyutils.so.1 )
 
-  # Public: Does KeyControl detect any known keyutils libraries?
+  # Public: Shared library names.
+  #
+  # Returns an Array.
+  def self.library_names
+    LIBRARIES
+  end
+
+  # Public: Is a libkeyutils shared library detected on this system?
   #
   # Returns a boolean.
   def self.available?
-    LIBRARIES.any? { |library| File.exists?(library) }
+    library_names.any? do |library_name|
+      begin
+        Fiddle::Handle.new(library_name)
+      rescue Fiddle::DLError
+        false
+      end
+    end
   end
 end
