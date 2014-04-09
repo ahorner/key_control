@@ -29,6 +29,17 @@ module KeyControl
       buffer
     end
 
+    # Public: Get a symbol representing the reason for the last error set by a
+    # system call.
+    #
+    # Returns a Symbol or nil.
+    def error
+      Errno.constants.detect do |error_name|
+        errno = Errno.const_get(error_name)
+        errno::Errno == Fiddle.last_error
+      end
+    end
+
     private
 
     # Private: Get a handle representing the system calls available through
@@ -82,6 +93,18 @@ module KeyControl
           Fiddle::ALIGN_CHAR,
           Fiddle::TYPE_SIZE_T ],
         Fiddle::TYPE_LONG )
+    end
+
+    # Private: Get a proc representing the keyctl_describe system call.
+    #
+    # Returns a Fiddle::Function.
+    def describe
+      @describe ||= Fiddle::Function.new(
+        keyutils["keyctl_describe"],
+        [ Fiddle::TYPE_INT,
+          Fiddle::ALIGN_CHAR,
+          Fiddle::TYPE_SIZE_T ],
+        Fiddle::TYPE_INT )
     end
   end
 end
