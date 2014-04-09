@@ -1,6 +1,7 @@
 require "test_helper"
 
 describe KeyControl::KeyRing do
+  let(:secret) { "the secret time forgot" }
 
   describe "thread keyring" do
     let(:ring) do
@@ -8,18 +9,20 @@ describe KeyControl::KeyRing do
     end
 
     it "allows read/write for values in the same thread" do
-      ring["testing"] = "testdata"
-      ring["testing"].must_equal "testdata"
+      key = "single-thread-test"
+      ring[key].must_equal nil
+
+      ring[key] = secret
+      ring[key].must_equal secret
     end
 
     it "uses a new keyring for new threads" do
-      ring["thread_test"].must_equal nil
-      thr = Thread.new do
-        ring["thread-test"] = "testdata"
-      end
-      thr.join
+      key = "multi-thread-test"
+      ring[key].must_equal nil
 
-      ring["thread-test"].must_equal nil
+      Thread.new { ring[key] = secret }.join
+
+      ring[key].must_equal nil
     end
   end
 
@@ -29,31 +32,30 @@ describe KeyControl::KeyRing do
     end
 
     it "allows read/write of values in the same process" do
-      ring["process-test-1"] = "foobar"
-      ring["process-test-1"].must_equal "foobar"
+      key = "single-process-test"
+      ring[key].must_equal nil
+
+      ring[key] = secret
+      ring[key].must_equal secret
     end
 
     it "allows read/write of values across threads in the same process" do
-      ring["process-thread-test"].must_equal nil
+      key = "process-thread-test"
+      ring[key].must_equal nil
 
-      thr = Thread.new do
-        ring["process-thread-test"] = "baz"
-      end
-      thr.join
+      Thread.new { ring[key] = secret }.join
 
-      ring["process-thread-test"].must_equal "baz"
+      ring[key].must_equal secret
     end
 
     it "uses a new keyring for new processes" do
-      ring["child-process-test"].must_equal nil
+      key = "multi-process-test"
+      ring[key].must_equal nil
 
-      pid = fork do
-        ring["child-process-test"] = "too many secrets"
-        exit
-      end
-
+      pid = fork { ring[key] = secret and exit }
       Process.waitpid(pid)
-      ring["child-process-test"].must_equal nil
+
+      ring[key].must_equal nil
     end
   end
 
@@ -62,31 +64,31 @@ describe KeyControl::KeyRing do
       KeyControl::KeyRing.new(KeyControl::SESSION)
     end
 
-    it "allows read/write of values in the same process" do
-      ring["session-test"] = "foobar"
-      ring["session-test"].must_equal "foobar"
+    it "allows read/write of values in the same thread/process" do
+      key = "session-test"
+      ring[key].must_equal nil
+
+      ring[key] = secret
+      ring[key].must_equal secret
     end
 
     it "allows read/write of values across threads in the same process" do
-      ring["session-thread-test"].must_equal nil
-      thr = Thread.new do
-        ring["session-thread-test"] = "baz"
-      end
-      thr.join
+      key = "session-thread-test"
+      ring[key].must_equal nil
 
-      ring["session-thread-test"].must_equal "baz"
+      Thread.new { ring[key] = secret }.join
+
+      ring[key].must_equal secret
     end
 
     it "allows read/write of values across processes in the same session" do
-      ring["session-process-test"].must_equal nil
+      key = "session-process-test"
+      ring[key].must_equal nil
 
-      pid = fork do
-        ring["session-process-test"] = "too many secrets"
-        exit
-      end
-
+      pid = fork { ring[key] = secret and exit }
       Process.waitpid(pid)
-      ring["session-process-test"].must_equal "too many secrets"
+
+      ring[key].must_equal secret
     end
   end
 end
