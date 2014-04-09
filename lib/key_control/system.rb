@@ -94,17 +94,5 @@ module KeyControl
           Fiddle::TYPE_SIZE_T ],
         Fiddle::TYPE_LONG )
     end
-
-    # Private: Get a proc representing the keyctl_describe system call.
-    #
-    # Returns a Fiddle::Function.
-    def describe
-      @describe ||= Fiddle::Function.new(
-        keyutils["keyctl_describe"],
-        [ Fiddle::TYPE_INT,
-          Fiddle::ALIGN_CHAR,
-          Fiddle::TYPE_SIZE_T ],
-        Fiddle::TYPE_INT )
-    end
   end
 end

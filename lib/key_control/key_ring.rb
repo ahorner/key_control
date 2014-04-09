@@ -36,12 +36,5 @@ module KeyControl
 
       system.get(:read, handle)
     end
-
-    # Public: Inspect the structure of and data stored in the current keyring.
-    #
-    # Returns
-    def inspect
-      system.get(:describe, @keyring)
-    end
   end
 end
