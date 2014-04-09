@@ -2,6 +2,8 @@ module KeyControl
 
   class KeyRing
 
+    attr_reader :system
+
     # Public: Get a new KeyControl::KeyRing instance with the specified keyring
     # identifier.
     #
@@ -20,7 +22,7 @@ module KeyControl
     #
     # Returns nothing.
     def []=(name, data)
-      execute(:add, "user", name, data, data.length, @keyring)
+      system.run(:add, "user", name, data, data.length, @keyring)
     end
 
     # Public: Get the data matching the passed description from the keychain.
@@ -29,26 +31,10 @@ module KeyControl
     #
     # Returns the requested data or nil.
     def [](name)
-      handle = execute(:search, "user", name, nil, @keyring)
+      handle = system.run(:search, "user", name, nil, @keyring)
       return nil if handle == -1
 
-      length = execute(:read, handle, "", 0)
-      buffer = "\x00" * length
-      execute(:read, handle, buffer, length)
-
-      buffer
-    end
-
-    private
-
-    # Private: Execute the requested action in keyctl.
-    #
-    # action - The action to perform.
-    # args   - A list of arguments which should be passed to the action.
-    #
-    # Returns the stdout value returned by the call.
-    def execute(action, *args)
-      @system.send(action).call(*args)
+      system.get(:read, handle)
     end
   end
 end
