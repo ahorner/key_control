@@ -33,29 +33,27 @@ initializer takes a single argument, the ID of the keyring you wish to store
 your data in. There are several (very useful) [special keyrings](http://manpages.ubuntu.com/manpages/oneiric/man1/keyctl.1.html),
 which are available for use as constants in the `KeyControl` module.
 
-As an example, we'll create a basic accessor for the session keyring (useful for sharing information among several grouped processes):
+As an example, we'll create a basic accessor for the session keyring (useful
+for sharing information among several grouped processes):
 ```ruby
 keyring = KeyControl::KeyRing.new(KeyControl::SESSION)
 ```
 
-Once you have your keyring instance, just treat it like you would a hash:
+Once you have your keyring instance, just add and fetch values like you would
+with any regular Hash:
 ```ruby
 keyring["mykey"] = "my passphrase"
 keyring["mykey"]
 # => "my passphrase"
 ```
 
-That's it! The power of this gem comes from the ability to use your kernel's
-built-in key management mechanism to share information between Ruby processes
+That's it! The power of this gem is the ability to use your kernel's built-in
+key management mechanism to share information between Ruby processes,
 without exposing your data to the outside world.
-
-## Future Enhancements
-
-- Non-default keyring management (creation, specifically)
 
 ## Contributing
 
-1. Fork it ( http://github.com/<my-github-username>/key_control/fork )
+1. Fork it ( http://github.com/ahorner/key_control/fork )
 2. Create your feature branch (`git checkout -b my-new-feature`)
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
