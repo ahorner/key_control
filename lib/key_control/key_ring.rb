@@ -36,5 +36,40 @@ module KeyControl
 
       system.get(:read, handle)
     end
+
+    # Public: Unlink a key from the keychain.
+    #
+    # name - The description of the data to unlink.
+    #
+    # Returns nothing.
+    def delete(name)
+      handle = system.run(:search, "user", name, nil, @keyring)
+      if handle == -1
+        raise SystemCallError.new("search #{name}", Fiddle.last_error)
+      end
+
+      error = system.run(:unlink, handle, @keyring)
+      if error == -1
+        raise SystemCallError.new("unlink #{name}", FFI.errno)
+      end
+    end
+
+    # Public: Set the timeout for the passed description.
+    #
+    # name    - The description of the data for which to set the timeout.
+    # timeout - The timeout to set in seconds.
+    #
+    # Returns nothing.
+    def set_timeout(name, timeout)
+      handle = system.run(:search, "user", name, nil, @keyring)
+      if handle == -1
+        raise SystemCallError.new("search #{name}", Fiddle.last_error)
+      end
+
+      error = system.run(:set_timeout, handle, timeout)
+      if handle == -1
+        raise SystemCallError.new("set_timeout #{name}", Fiddle.last_error)
+      end
+    end
   end
 end

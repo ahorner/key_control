@@ -70,6 +70,17 @@ module KeyControl
         Fiddle::TYPE_INT )
     end
 
+    # Private: Get a proc representing the keyctl_unlink system call.
+    #
+    # Returns a Fiddle::Function
+    def unlink
+      @unlink ||= Fiddle::Function.new(
+        keyutils["keyctl_unlink"],
+        [ Fiddle::ALIGN_INT,
+          Fiddle::ALIGN_INT ],
+        Fiddle::TYPE_LONG )
+    end
+
     # Private: Get a proc representing the request_key system call.
     #
     # Returns a Fiddle::Function.
@@ -92,6 +103,17 @@ module KeyControl
         [ Fiddle::TYPE_INT,
           Fiddle::ALIGN_CHAR,
           Fiddle::TYPE_SIZE_T ],
+        Fiddle::TYPE_LONG )
+    end
+
+    # Private: Get a proc representing the keyctl_set_timeout system call.
+    #
+    # Returns a Fiddle::Function.
+    def set_timeout
+      @set_timeout ||= Fiddle::Function.new(
+        keyutils["keyctl_set_timeout"],
+        [ Fiddle::TYPE_INT,
+          Fiddle::TYPE_INT ],
         Fiddle::TYPE_LONG )
     end
   end
