@@ -36,5 +36,22 @@ module KeyControl
 
       system.get(:read, handle)
     end
+
+    # Public: Unlink a key from the keychain.
+    #
+    # name - The description of the data to unlink.
+    #
+    # Returns nothing.
+    def delete(name)
+      handle = system.run(:search, "user", name, nil, @keyring)
+      if handle == -1
+        raise SystemCallError.new("search #{name}", Fiddle.last_error)
+      end
+
+      error = system.run(:unlink, handle, @keyring)
+      if error == -1
+        raise SystemCallError.new("unlink #{name}", FFI.errno)
+      end
+    end
   end
 end

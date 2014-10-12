@@ -14,6 +14,7 @@ describe KeyControl::KeyRing do
 
       ring[key] = secret
       ring[key].must_equal secret
+      ring.delete key
     end
 
     it "uses a new keyring for new threads" do
@@ -37,6 +38,7 @@ describe KeyControl::KeyRing do
 
       ring[key] = secret
       ring[key].must_equal secret
+      ring.delete key
     end
 
     it "allows read/write of values across threads in the same process" do
@@ -64,6 +66,20 @@ describe KeyControl::KeyRing do
       KeyControl::KeyRing.new(KeyControl::SESSION)
     end
 
+    after do
+      session_keys =
+        [ "session-test",
+          "session-thread-test",
+          "session-process-test" ]
+
+      session_keys.each do |k|
+        begin
+          ring.delete k
+        rescue
+        end
+      end
+    end
+
     it "allows read/write of values in the same thread/process" do
       key = "session-test"
       ring[key].must_equal nil
@@ -89,6 +105,10 @@ describe KeyControl::KeyRing do
       Process.waitpid(pid)
 
       ring[key].must_equal secret
+    end
+
+    it "raises an exception when key does not exist" do
+      -> { ring.delete "a_key_which_does_not_exist" }.must_raise Errno::ENOKEY
     end
   end
 end
