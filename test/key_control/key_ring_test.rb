@@ -70,13 +70,15 @@ describe KeyControl::KeyRing do
       session_keys =
         [ "session-test",
           "session-thread-test",
-          "session-process-test" ]
+          "session-process-test",
+          "session-timeout-test" ]
 
       session_keys.each do |k|
         begin
           ring.delete k
         rescue
         end
+
       end
     end
 
@@ -109,6 +111,17 @@ describe KeyControl::KeyRing do
 
     it "raises an exception when key does not exist" do
       -> { ring.delete "a_key_which_does_not_exist" }.must_raise Errno::ENOKEY
+    end
+
+    it "expires when a timeout is set in the same session" do
+      key = "session-timeout-test"
+      ring[key].must_equal nil
+
+      ring[key] = secret
+      ring.set_timeout(key, 1)
+      ring[key].must_equal secret
+      sleep 1.1
+      ring[key].must_equal nil
     end
   end
 end

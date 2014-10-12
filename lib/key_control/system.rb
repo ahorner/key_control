@@ -105,5 +105,16 @@ module KeyControl
           Fiddle::TYPE_SIZE_T ],
         Fiddle::TYPE_LONG )
     end
+
+    # Private: Get a proc representing the keyctl_set_timeout system call.
+    #
+    # Returns a Fiddle::Function.
+    def set_timeout
+      @set_timeout ||= Fiddle::Function.new(
+        keyutils["keyctl_set_timeout"],
+        [ Fiddle::TYPE_INT,
+          Fiddle::TYPE_INT ],
+        Fiddle::TYPE_LONG )
+    end
   end
 end
