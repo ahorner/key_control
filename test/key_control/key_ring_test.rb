@@ -79,14 +79,12 @@ describe KeyControl::KeyRing do
     it "allows read/write of values in the same thread/process" do
       ring[key] = secret
       ring[key].must_equal secret
-      ring.delete key
     end
 
     it "allows read/write of values across threads in the same process" do
       Thread.new { ring[key] = secret }.join
 
       ring[key].must_equal secret
-      ring.delete key
     end
 
     it "allows read/write of values across processes in the same session" do
@@ -94,7 +92,6 @@ describe KeyControl::KeyRing do
       Process.waitpid(pid)
 
       ring[key].must_equal secret
-      ring.delete key
     end
   end
 end
