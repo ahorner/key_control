@@ -36,5 +36,26 @@ module KeyControl
 
       system.get(:read, handle)
     end
+
+    # Public: Remove the data matching the passed description from the keychain.
+    #
+    # name - The description of the data to remove.
+    #
+    # Returns nothing.
+    def delete(name)
+      handle = system.run!(:search, "user", name, nil, @keyring)
+      system.run!(:unlink, handle, @keyring)
+    end
+
+    # Public: Set a timeout for the data matching the passed description.
+    #
+    # name    - The description of the data for which to set a timeout.
+    # timeout - The timeout to set in seconds.
+    #
+    # Returns nothing.
+    def set_timeout(name, timeout)
+      handle = system.run!(:search, "user", name, nil, @keyring)
+      system.run!(:set_timeout, handle, timeout)
+    end
   end
 end
