@@ -2,7 +2,7 @@ require "test_helper"
 
 describe KeyControl::KeyRing do
   let(:secret) { "the secret time forgot" }
-  let(:key) { "my-key" }
+  let(:key) { "my-key-#{rand}" }
 
   before do
     ring[key].must_equal nil
