@@ -25,6 +25,14 @@ module KeyControl
   def self.library_names
     LIBRARIES
   end
+  
+  # Public: Update the shared library names, for systems with different
+  # libraries that CentOS installations.
+  # 
+  # Returns an Array
+  def self.library_names=(user_libs)
+    LIBRARIES.replace Array(user_libs)
+  end
 
   # Public: Is a libkeyutils shared library detected on this system?
   #
